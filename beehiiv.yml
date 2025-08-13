@@ -1,0 +1,22 @@
+name: Beehiiv Daily Send
+
+on:
+  schedule:
+    - cron: "0 5 * * *"  # 05:00 UTC = 09:00 UAE (GMT+4)
+  workflow_dispatch: {}   # lets you run it manually from the Actions tab
+
+jobs:
+  send:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      # Node 20 already has fetch built-in; no extra deps needed.
+      - name: Run publisher
+        run: node beehiiv-publish.mjs
+        env:
+          BEEHIIV_API_KEY: ${{ secrets.BEEHIIV_API_KEY }}
